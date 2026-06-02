@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us{% endblock %}
+{% load core_extras %}
+
+{% block extra_css %}
+/* ── ABOUT PAGE SPECIFIC ── */
+.about-deep { background: var(--cream); }
+
+.timeline {
+    position: relative;
+    padding-left: 2rem;
+}
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--green-main), var(--gold-main));
+}
+.timeline-item {
+    position: relative;
+    padding-bottom: 2.5rem;
+    padding-left: 1.5rem;
+}
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -2.35rem; top: 4px;
+    width: 14px; height: 14px;
+    background: var(--gold-main);
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 0 0 3px var(--gold-main);
+}
+.timeline-item h4 {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    color: var(--green-dark);
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+}
+.timeline-item p { font-size: 0.875rem; color: var(--gray-600); line-height: 1.7; }
+
+.vm-full {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    box-shadow: var(--shadow-sm);
+    border-top: 4px solid var(--green-main);
+}
+.vm-full.gold { border-top-color: var(--gold-main); }
+.vm-full h3 {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    color: var(--green-dark);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.vm-full h3 .icon {
+    width: 44px; height: 44px;
+    background: var(--green-pale);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; color: var(--green-main);
+}
+.vm-full.gold h3 .icon { background: var(--gold-pale); color: var(--gold-main); }
+.vm-full p { color: var(--gray-600); line-height: 1.8; }
+
+.values-full-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+.value-full-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    border: 1px solid var(--gray-200);
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.value-full-card:hover {
+    border-color: var(--green-light);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+}
+.value-full-icon {
+    width: 56px; height: 56px;
+    background: var(--green-pale);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; color: var(--green-main);
+    transition: var(--transition);
+}
+.value-full-card:hover .value-full-icon {
+    background: var(--green-main);
+    color: white;
+}
+.value-full-card h4 {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    color: var(--green-dark);
+    font-weight: 600;
+}
+.value-full-card p { font-size: 0.875rem; color: var(--gray-600); line-height: 1.7; }
+
+.stats-responsive { display: grid; grid-template-columns: repeat(4,1fr); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+    .values-full-grid { grid-template-columns: 1fr 1fr; }
+    .about-deep .grid-2 { grid-template-columns: 1fr; }
+    .stats-responsive { grid-template-columns: repeat(2,1fr) !important; }
+}
+@media (max-width: 480px) {
+    .values-full-grid { grid-template-columns: 1fr; }
+    .stats-responsive { grid-template-columns: 1fr !important; }
+}
+{% endblock %}
+
+{% block content %}
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+    <div class="container page-hero-content">
+        <div class="breadcrumb" data-aos="fade-down">
+            <a href="{% url 'core:home' %}">Home</a>
+            <span>/</span>
+            <span class="current">About Us</span>
+        </div>
+        <h1 data-aos="fade-up">About East Africa<br><span style="color:var(--gold-light)">AgroHub Export</span></h1>
+        <p data-aos="fade-up" data-aos-delay="100">Connecting East African agriculture to global markets since inception — with integrity, quality, and purpose.</p>
+    </div>
+</section>
+
+<!-- ABOUT DEEP -->
+<section class="about-deep py-section">
+    <div class="container">
+        <div class="grid-2" style="align-items:center; gap:4rem;">
+            <div data-aos="fade-right">
+                <div class="section-label">Our Story</div>
+                <h2 class="section-title">{{ site_settings.about_title }}</h2>
+                <p style="margin-top:1.25rem; color:var(--gray-600); line-height:1.9; font-size:0.95rem;">
+                    {{ site_settings.about_text }}
+                </p>
+                <div style="margin-top:2rem; display:flex; gap:1rem; flex-wrap:wrap;">
+                    <a href="{% url 'core:contact' %}" class="btn btn-green">
+                        <i class="fas fa-paper-plane"></i> Get in Touch
+                    </a>
+                    <a href="{% url 'products:list' %}" class="btn" style="background:var(--gray-100); color:var(--green-dark);">
+                        <i class="fas fa-seedling"></i> View Products
+                    </a>
+                </div>
+            </div>
+            <div data-aos="fade-left">
+                {% if site_settings.about_image %}
+                    <img src="{{ site_settings.about_image.url }}" alt="About AgroHub" style="width:100%; border-radius:var(--radius-lg); box-shadow:var(--shadow-lg);">
+                {% else %}
+                    <img src="{% static 'img/logo.jpg' %}" alt="East Africa Farming" style="width:100%; border-radius:var(--radius-lg); box-shadow:var(--shadow-lg);">
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- VISION & MISSION -->
+<section style="background:white;" class="py-section">
+    <div class="container">
+        <div style="text-align:center; margin-bottom:3rem;" data-aos="fade-up">
+            <div class="section-label" style="justify-content:center;">Our Direction</div>
+            <h2 class="section-title">Vision &amp; Mission</h2>
+        </div>
+        <div class="grid-2" style="gap:2rem;">
+            <div class="vm-full" data-aos="fade-right">
+                <h3>
+                    <div class="icon"><i class="fas fa-eye"></i></div>
+                    Our Vision
+                </h3>
+                <p>{{ site_settings.vision }}</p>
+            </div>
+            <div class="vm-full gold" data-aos="fade-left">
+                <h3>
+                    <div class="icon"><i class="fas fa-rocket"></i></div>
+                    Our Mission
+                </h3>
+                <p>{{ site_settings.mission }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CORE VALUES -->
+<section style="background:var(--cream);" class="py-section">
+    <div class="container">
+        <div style="text-align:center; margin-bottom:3rem;" data-aos="fade-up">
+            <div class="section-label" style="justify-content:center;">What We Stand For</div>
+            <h2 class="section-title">Our Core Values</h2>
+            <p class="section-subtitle" style="margin:1rem auto 0;">These principles guide every decision we make and every relationship we build.</p>
+        </div>
+        <div class="values-full-grid">
+            {% for val in core_values %}
+            <div class="value-full-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                <div class="value-full-icon"><i class="{{ val.icon }}"></i></div>
+                <h4>{{ val.title }}</h4>
+                <p>{{ val.description|default:"We uphold this value in every aspect of our business operations and trade relationships." }}</p>
+            </div>
+            {% empty %}
+            {% for v in "Quality Excellence,Integrity & Transparency,Reliability,Customer Satisfaction,Sustainable Trade,Innovation & Growth"|split:"," %}
+            <div class="value-full-card" data-aos="fade-up">
+                <div class="value-full-icon"><i class="fas fa-gem"></i></div>
+                <h4>{{ v }}</h4>
+                <p>We uphold this value in every aspect of our business operations and partnerships.</p>
+            </div>
+            {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- STATS -->
+<section style="background:linear-gradient(135deg, var(--green-dark), var(--green-mid));" class="py-section-sm">
+    <div class="container">
+        <div class="stats-responsive" style="gap:1rem; text-align:center;">
+            {% for stat in stats %}
+            <div data-aos="zoom-in" data-aos-delay="{{ forloop.counter0 }}00" style="padding:1.5rem 1rem; border-right:1px solid rgba(255,255,255,0.1);">
+                <div style="font-size:2rem; color:var(--gold-light); margin-bottom:0.5rem;"><i class="{{ stat.icon }}"></i></div>
+                <div style="font-family:var(--font-display); font-size:2.5rem; font-weight:800; color:white; line-height:1;">{{ stat.number }}</div>
+                <div style="font-size:0.8rem; color:rgba(255,255,255,0.6); text-transform:uppercase; letter-spacing:0.08em; margin-top:0.4rem;">{{ stat.label }}</div>
+            </div>
+            {% empty %}
+            {% for s in "500+~Farmer Partners,20+~Export Countries,15+~Products,100%~Quality Assured"|split:"," %}
+            <div data-aos="zoom-in" style="padding:1.5rem 1rem; border-right:1px solid rgba(255,255,255,0.1);">
+                <div style="font-size:2rem; color:var(--gold-light); margin-bottom:0.5rem;"><i class="fas fa-star"></i></div>
+                <div style="font-family:var(--font-display); font-size:2.5rem; font-weight:800; color:white; line-height:1;">{{ s|truncatewords:1 }}</div>
+                <div style="font-size:0.8rem; color:rgba(255,255,255,0.6); text-transform:uppercase; letter-spacing:0.08em; margin-top:0.4rem;">Excellence</div>
+            </div>
+            {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

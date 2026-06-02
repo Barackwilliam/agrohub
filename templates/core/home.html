@@ -1,0 +1,1182 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block extra_css %}
+/* ── HERO ── */
+.hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+.hero-slides { position: absolute; inset: 0; z-index: 0; }
+.hero-slide {
+    position: absolute; inset: 0;
+    opacity: 0;
+    transition: opacity 1.6s ease;
+    background-size: cover;
+    background-position: center;
+}
+.hero-slide.active { opacity: 1; }
+.hero-slide::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(5,46,22,.92) 0%, rgba(5,46,22,.7) 50%, rgba(0,0,0,.3) 100%);
+}
+.hero-slide-1 { background-image: url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1600&q=80'); }
+.hero-slide-2 { background-image: url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=1600&q=80'); }
+.hero-slide-3 { background-image: url('https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=1600&q=80'); }
+.hero-slide-4 { background-image: url('https://images.unsplash.com/photo-1611735341450-74d61e660ad2?w=1600&q=80'); }
+
+.hero-dots {
+    position: absolute;
+    bottom: 5rem; right: 2rem;
+    display: flex; flex-direction: column; gap: .5rem;
+    z-index: 10;
+}
+.hero-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.35);
+    cursor: pointer;
+    transition: var(--transition);
+}
+.hero-dot.active { height: 24px; border-radius: 3px; background: var(--gold-light); }
+
+.hero-progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold-main), var(--gold-light));
+    z-index: 10; width: 0;
+    transition: width 5s linear;
+}
+
+.hero-content {
+    position: relative; z-index: 2;
+    max-width: 800px;
+    padding: 6rem 0 4rem;
+}
+
+.hero-badge {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: rgba(234,179,8,.15);
+    border: 1px solid rgba(234,179,8,.3);
+    color: var(--gold-light);
+    padding: .45rem 1.1rem;
+    border-radius: 50px;
+    font-size: .72rem; font-weight: 600;
+    letter-spacing: .14em; text-transform: uppercase;
+    margin-bottom: 1.75rem;
+    backdrop-filter: blur(8px);
+}
+.hero-badge-dot {
+    width: 7px; height: 7px;
+    background: var(--gold-light);
+    border-radius: 50%;
+    animation: pulse-dot 2s infinite;
+}
+@keyframes pulse-dot {
+    0%,100% { opacity:1; transform:scale(1); }
+    50%      { opacity:.5; transform:scale(1.5); }
+}
+
+.hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.8rem, 6vw, 5.5rem);
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.08;
+    margin-bottom: 1.75rem;
+    letter-spacing: -.02em;
+}
+.hero-title .hl {
+    color: var(--gold-light);
+    font-style: italic;
+    position: relative; display: inline-block;
+}
+.hero-title .hl::after {
+    content: '';
+    position: absolute; bottom: -4px; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold-light), transparent);
+    border-radius: 2px;
+}
+
+.hero-sub {
+    font-size: clamp(1rem, 2vw, 1.15rem);
+    color: rgba(255,255,255,.78);
+    line-height: 1.85;
+    margin-bottom: 2.5rem;
+    max-width: 540px;
+    font-weight: 300;
+}
+
+.hero-btns { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 3rem; }
+
+.btn-hero-gold {
+    display: inline-flex; align-items: center; gap: .6rem;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold-main));
+    color: #fff;
+    padding: .85rem 2rem;
+    border-radius: 50px;
+    font-weight: 600; font-size: .95rem;
+    text-decoration: none;
+    box-shadow: 0 8px 32px rgba(202,138,4,.4);
+    transition: var(--transition);
+}
+.btn-hero-gold:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(202,138,4,.55); color: #fff; }
+
+.btn-hero-outline {
+    display: inline-flex; align-items: center; gap: .6rem;
+    background: rgba(255,255,255,.1);
+    border: 1.5px solid rgba(255,255,255,.35);
+    color: #fff;
+    padding: .85rem 2rem;
+    border-radius: 50px;
+    font-weight: 500; font-size: .95rem;
+    text-decoration: none;
+    backdrop-filter: blur(8px);
+    transition: var(--transition);
+}
+.btn-hero-outline:hover { background: rgba(255,255,255,.2); border-color: rgba(255,255,255,.6); transform: translateY(-3px); color: #fff; }
+
+.hero-markets { display: flex; align-items: center; flex-wrap: wrap; gap: .75rem; }
+.hero-markets-label { font-size: .72rem; color: rgba(255,255,255,.5); letter-spacing: .12em; text-transform: uppercase; font-weight: 500; }
+.mflag {
+    display: inline-flex; align-items: center; gap: .4rem;
+    font-size: .8rem; color: rgba(255,255,255,.8);
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.15);
+    padding: .3rem .85rem; border-radius: 50px;
+    backdrop-filter: blur(4px);
+}
+
+.hero-scroll-hint {
+    position: absolute; bottom: 2rem; left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,.45);
+    display: flex; flex-direction: column; align-items: center; gap: .4rem;
+    font-size: .65rem; letter-spacing: .18em; text-transform: uppercase;
+    z-index: 2;
+    animation: bob 2.5s ease-in-out infinite;
+}
+@keyframes bob {
+    0%,100% { transform: translateX(-50%) translateY(0); }
+    50%      { transform: translateX(-50%) translateY(8px); }
+}
+
+/* ── STATS BAR ── */
+.stats-bar {
+    background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 100%);
+    padding: 3.5rem 0;
+    position: relative; overflow: hidden;
+}
+.stats-bar::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.stats-grid {
+    display: grid; grid-template-columns: repeat(4,1fr);
+    gap: 0; position: relative; z-index: 1;
+}
+.stat-item { text-align: center; padding: 2rem 1rem; border-right: 1px solid rgba(255,255,255,.08); }
+.stat-item:last-child { border-right: none; }
+.stat-icon { font-size: 1.6rem; color: var(--gold-light); margin-bottom: .75rem; opacity: .9; }
+.stat-number {
+    font-family: var(--font-display);
+    font-size: 2.8rem; font-weight: 700;
+    color: #fff; line-height: 1; margin-bottom: .4rem;
+}
+.stat-label { font-size: .72rem; color: rgba(255,255,255,.55); letter-spacing: .1em; text-transform: uppercase; font-weight: 500; }
+
+/* ── ABOUT ── */
+.about-sec { background: var(--cream); overflow: hidden; }
+.about-img-wrap {
+    position: relative;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    box-shadow: var(--shadow-xl);
+}
+.about-img-wrap img { width:100%; height:100%; object-fit:cover; transition: transform .8s ease; }
+.about-img-wrap:hover img { transform: scale(1.04); }
+.about-float {
+    position: absolute; bottom: 1.5rem; left: 1.5rem;
+    background: rgba(255,255,255,.95);
+    backdrop-filter: blur(16px);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.25rem;
+    display: flex; align-items: center; gap: .85rem;
+    box-shadow: var(--shadow-md);
+}
+.af-icon {
+    width: 46px; height: 46px;
+    background: linear-gradient(135deg, var(--green-mid), var(--green-light));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 1.15rem;
+}
+.af-num { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: var(--green-dark); line-height: 1; }
+.af-lbl { font-size: .7rem; color: var(--gray-600); font-weight: 500; }
+.vm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .85rem; margin-top: 2rem; }
+.vm-card {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 1.35rem;
+    border-left: 3px solid var(--gold-main);
+    box-shadow: 0 2px 12px rgba(0,0,0,.05);
+}
+.vm-card h4 {
+    font-family: var(--font-display);
+    font-size: .95rem; color: var(--green-dark);
+    margin-bottom: .45rem;
+    display: flex; align-items: center; gap: .5rem;
+}
+.vm-card p { font-size: .85rem; color: var(--gray-600); line-height: 1.75; font-weight: 300; }
+
+/* ── PRODUCTS ── */
+.products-sec { background: #fff; position: relative; overflow: hidden; }
+.products-sec::before {
+    content: '';
+    position: absolute; top: -200px; right: -200px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(240,253,244,.8) 0%, transparent 70%);
+    border-radius: 50%; pointer-events: none;
+}
+.cat-tabs { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 2.5rem; }
+.cat-tab {
+    display: flex; align-items: center; gap: .45rem;
+    padding: .55rem 1.2rem;
+    border-radius: 50px;
+    border: 1.5px solid var(--gray-200);
+    background: #fff;
+    color: var(--gray-600);
+    font-size: .82rem; font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: var(--font-body);
+}
+.cat-tab.active,
+.cat-tab:hover {
+    background: var(--green-mid);
+    border-color: var(--green-mid);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(20,83,45,.25);
+}
+.products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.5rem; }
+.product-card {
+    background: #fff;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    border: 1.5px solid var(--gray-200);
+    transition: var(--transition);
+    cursor: pointer;
+}
+.product-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-xl); border-color: transparent; }
+.prod-img {
+    aspect-ratio: 4/3; overflow: hidden;
+    background: var(--green-pale);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+}
+.prod-img img { width:100%; height:100%; object-fit:cover; transition: transform .6s ease; }
+.product-card:hover .prod-img img { transform: scale(1.1); }
+.prod-badge {
+    position: absolute; top: .75rem; left: .75rem;
+    background: rgba(5,46,22,.85);
+    color: #fff; font-size: .65rem; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase;
+    padding: .25rem .7rem; border-radius: 50px;
+    backdrop-filter: blur(6px);
+}
+.prod-body { padding: 1.25rem; }
+.prod-name { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; color: var(--green-dark); margin-bottom: .4rem; }
+.prod-desc {
+    font-size: .8rem; color: var(--gray-600);
+    line-height: 1.65; margin-bottom: .75rem;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    font-weight: 300;
+}
+.prod-origin { display: flex; align-items: center; gap: .4rem; font-size: .75rem; color: var(--green-light); font-weight: 500; }
+
+/* ══════════════════════════════════════
+   WHY CHOOSE US — PREMIUM SLIDER DESIGN
+══════════════════════════════════════ */
+.why-sec {
+    position: relative;
+    overflow: hidden;
+    min-height: 780px;
+    display: flex;
+    align-items: center;
+}
+
+/* ── Background image slides ── */
+.why-bg-slides {
+    position: absolute;
+    inset: 0; z-index: 0;
+}
+.why-bg-slide {
+    position: absolute; inset: 0;
+    opacity: 0;
+    transition: opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1);
+    background-size: cover;
+    background-position: center;
+    transform: scale(1.04);
+    transition: opacity 1.8s ease, transform 8s ease;
+}
+.why-bg-slide.active {
+    opacity: 1;
+    transform: scale(1);
+}
+.why-bg-1 { background-image: url('https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=1600&q=85'); }
+.why-bg-2 { background-image: url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1600&q=85'); }
+.why-bg-3 { background-image: url('https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=1600&q=85'); }
+.why-bg-4 { background-image: url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=1600&q=85'); }
+.why-bg-5 { background-image: url('https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=1600&q=85'); }
+.why-bg-6 { background-image: url('https://images.unsplash.com/photo-1611735341450-74d61e660ad2?w=1600&q=85'); }
+
+/* Multi-layer overlay */
+.why-overlay {
+    position: absolute; inset: 0; z-index: 1;
+    background:
+        linear-gradient(105deg,
+            rgba(5,46,22,0.96)   0%,
+            rgba(5,46,22,0.82)   38%,
+            rgba(5,46,22,0.55)   62%,
+            rgba(0,0,0,0.3)      100%
+        );
+}
+/* Gold shimmer top */
+.why-overlay-2 {
+    position: absolute; inset: 0; z-index: 1;
+    background:
+        radial-gradient(ellipse at 80% 0%,   rgba(234,179,8,0.12) 0%, transparent 55%),
+        radial-gradient(ellipse at 0%  100%, rgba(21,128,61,0.15) 0%, transparent 50%);
+}
+/* Dot texture */
+.why-dots-tex {
+    position: absolute; inset: 0; z-index: 2; pointer-events: none;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 28px 28px;
+}
+/* Gold top accent line */
+.why-top-bar {
+    position: absolute; top: 0; left: 0; right: 0; height: 3px; z-index: 3;
+    background: linear-gradient(90deg, transparent 0%, var(--gold-main) 20%, var(--gold-light) 50%, var(--gold-main) 80%, transparent 100%);
+}
+
+/* ── Content wrapper ── */
+.why-inner {
+    position: relative; z-index: 4;
+    width: 100%;
+    padding: 6rem 0;
+}
+
+/* ── Header ── */
+.why-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: flex-end;
+    gap: 2rem;
+    margin-bottom: 3.5rem;
+}
+.why-header-left { max-width: 560px; }
+.why-eyebrow {
+    display: inline-flex; align-items: center; gap: .6rem;
+    font-size: .68rem; font-weight: 700;
+    letter-spacing: .22em; text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: .85rem;
+}
+.why-eyebrow-line {
+    width: 28px; height: 2px;
+    background: linear-gradient(90deg, var(--gold-main), var(--gold-light));
+    border-radius: 2px;
+}
+.why-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 900; color: #fff;
+    line-height: 1.1; letter-spacing: -.025em;
+    margin-bottom: .85rem;
+}
+.why-title em { color: var(--gold-light); font-style: italic; }
+.why-subtitle {
+    font-size: .95rem; color: rgba(255,255,255,.65);
+    line-height: 1.8; font-weight: 300; max-width: 440px;
+}
+
+/* Slide nav controls */
+.why-nav {
+    display: flex; align-items: center; gap: .65rem;
+    flex-shrink: 0;
+}
+.why-nav-btn {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,.2);
+    background: rgba(255,255,255,.06);
+    color: rgba(255,255,255,.7);
+    font-size: .9rem;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+    backdrop-filter: blur(8px);
+}
+.why-nav-btn:hover {
+    background: var(--gold-main);
+    border-color: var(--gold-main);
+    color: #fff;
+    transform: scale(1.1);
+}
+
+/* ── Cards track ── */
+.why-track-wrap {
+    overflow: hidden;
+    position: relative;
+}
+.why-track {
+    display: flex;
+    gap: 1.5rem;
+    transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Glassmorphism card ── */
+.why-card {
+    flex: 0 0 calc(33.333% - 1rem);
+    min-width: 0;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: var(--radius-xl);
+    padding: 2.4rem 2rem;
+    position: relative; overflow: hidden;
+    transition: var(--transition);
+    cursor: default;
+}
+/* card inner glow on hover */
+.why-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(234,179,8,.07) 0%, transparent 60%);
+    opacity: 0; transition: opacity .4s ease;
+    border-radius: inherit;
+}
+/* gold top line */
+.why-card::after {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold-main), var(--gold-light), transparent);
+    opacity: 0; transition: opacity .4s ease;
+}
+.why-card:hover {
+    background: rgba(255,255,255,.1);
+    border-color: rgba(234,179,8,.28);
+    transform: translateY(-8px);
+    box-shadow: 0 32px 64px rgba(0,0,0,.35), 0 0 0 1px rgba(234,179,8,.1);
+}
+.why-card:hover::before { opacity: 1; }
+.why-card:hover::after  { opacity: 1; }
+
+/* card number watermark */
+.why-card-num {
+    position: absolute; top: 1.25rem; right: 1.5rem;
+    font-family: var(--font-display);
+    font-size: 3.5rem; font-weight: 900;
+    color: rgba(255,255,255,.04);
+    line-height: 1; pointer-events: none;
+    transition: var(--transition);
+}
+.why-card:hover .why-card-num { color: rgba(234,179,8,.07); }
+
+/* card icon */
+.why-icon {
+    width: 58px; height: 58px;
+    background: linear-gradient(135deg, rgba(202,138,4,.25) 0%, rgba(234,179,8,.12) 100%);
+    border: 1px solid rgba(234,179,8,.28);
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; color: var(--gold-light);
+    margin-bottom: 1.4rem;
+    transition: var(--transition);
+    position: relative; z-index: 1;
+}
+.why-card:hover .why-icon {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold-main));
+    border-color: var(--gold-light);
+    color: #fff;
+    transform: scale(1.08) rotate(-4deg);
+    box-shadow: 0 8px 24px rgba(202,138,4,.4);
+}
+
+.why-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.1rem; font-weight: 700;
+    color: #fff;
+    margin-bottom: .65rem;
+    line-height: 1.3;
+    position: relative; z-index: 1;
+}
+.why-card p {
+    font-size: .845rem; color: rgba(255,255,255,.6);
+    line-height: 1.85; font-weight: 300;
+    position: relative; z-index: 1;
+}
+
+/* card bottom badge */
+.why-card-badge {
+    display: inline-flex; align-items: center; gap: .35rem;
+    margin-top: 1.4rem;
+    font-size: .65rem; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: rgba(234,179,8,.6);
+    position: relative; z-index: 1;
+}
+.why-card-badge::before {
+    content: '';
+    width: 16px; height: 1px;
+    background: rgba(234,179,8,.4);
+    border-radius: 1px;
+}
+
+/* ── Progress bar & dots ── */
+.why-progress-wrap {
+    display: flex; align-items: center; gap: 1.25rem;
+    margin-top: 2.5rem;
+}
+.why-progress-bar {
+    flex: 1; height: 2px;
+    background: rgba(255,255,255,.1);
+    border-radius: 2px; overflow: hidden;
+}
+.why-progress-fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--gold-main), var(--gold-light));
+    border-radius: 2px;
+    transition: width 4s linear;
+}
+.why-slide-dots {
+    display: flex; gap: .4rem;
+}
+.why-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.25);
+    cursor: pointer; transition: var(--transition);
+    border: none; padding: 0;
+}
+.why-dot.active {
+    background: var(--gold-light);
+    width: 20px; border-radius: 3px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+    .why-card { flex: 0 0 calc(50% - .75rem); }
+    .why-header { grid-template-columns: 1fr; gap: 1.25rem; }
+    .why-nav { justify-content: flex-start; }
+}
+@media (max-width: 640px) {
+    .why-card { flex: 0 0 calc(85% - .75rem); }
+    .why-sec { min-height: auto; }
+}
+
+/* ── CORE VALUES ── */
+.values-sec { background: var(--gray-100); }
+.val-card {
+    background: #fff;
+    border-radius: var(--radius-xl); padding: 2rem;
+    text-align: center;
+    border: 1.5px solid var(--gray-200);
+    transition: var(--transition);
+    position: relative; overflow: hidden;
+}
+.val-card:hover { border-color: var(--green-light); box-shadow: 0 16px 40px rgba(21,128,61,.12); transform: translateY(-5px); }
+.val-icon {
+    width: 64px; height: 64px;
+    background: var(--green-pale);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; color: var(--green-light);
+    margin: 0 auto 1.25rem;
+    transition: var(--transition);
+}
+.val-card:hover .val-icon { background: var(--green-light); color: #fff; }
+.val-card h3 { font-family: var(--font-display); font-size: 1rem; color: var(--green-dark); font-weight: 700; }
+
+/* ── CTA ── */
+.cta-sec {
+    background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-main) 50%, var(--gold-light) 100%);
+    padding: 5.5rem 0; text-align: center;
+    position: relative; overflow: hidden;
+}
+.cta-sec::before, .cta-sec::after { content: ''; position: absolute; border-radius: 50%; }
+.cta-sec::before { top: -120px; left: -120px; width: 450px; height: 450px; background: rgba(255,255,255,.07); }
+.cta-sec::after  { bottom: -80px; right: -80px; width: 350px; height: 350px; background: rgba(255,255,255,.05); }
+.cta-inner { position: relative; z-index: 1; }
+.cta-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4.5vw, 3.2rem);
+    font-weight: 900; color: #fff;
+    margin-bottom: 1rem; letter-spacing: -.02em;
+}
+.cta-sub { color: rgba(255,255,255,.85); font-size: 1.05rem; margin-bottom: 2.25rem; font-weight: 300; }
+.cta-btns { display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; }
+.btn-cta-white {
+    display: inline-flex; align-items: center; gap: .6rem;
+    background: #fff; color: var(--gold-dark);
+    padding: .9rem 2.25rem; border-radius: 50px;
+    font-weight: 700; font-size: .95rem; text-decoration: none;
+    box-shadow: 0 8px 28px rgba(0,0,0,.18);
+    transition: var(--transition);
+}
+.btn-cta-white:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,.28); color: var(--gold-dark); }
+.btn-cta-outline {
+    display: inline-flex; align-items: center; gap: .6rem;
+    background: rgba(255,255,255,.15);
+    border: 1.5px solid rgba(255,255,255,.5);
+    color: #fff; padding: .9rem 2.25rem; border-radius: 50px;
+    font-weight: 600; font-size: .95rem; text-decoration: none;
+    backdrop-filter: blur(8px);
+    transition: var(--transition);
+}
+.btn-cta-outline:hover { background: rgba(255,255,255,.25); transform: translateY(-3px); color: #fff; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) {
+    .grid-2 { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+    .stats-grid { grid-template-columns: repeat(2,1fr); }
+    .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .stat-item:nth-child(odd) { border-right: 1px solid rgba(255,255,255,.08); }
+    .stat-item:last-child,
+    .stat-item:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+    .vm-grid { grid-template-columns: 1fr; }
+    .hero-content { padding: 5rem 0 3rem; }
+}
+@media (max-width: 540px) {
+    .products-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .hero-title { font-size: 2.4rem; }
+    .hero-btns { flex-direction: column; }
+    .btn-hero-gold, .btn-hero-outline { justify-content: center; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+}
+{% endblock %}
+
+{% block content %}
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+    <div class="hero-slides">
+        <div class="hero-slide hero-slide-1 active"></div>
+        <div class="hero-slide hero-slide-2"></div>
+        <div class="hero-slide hero-slide-3"></div>
+        <div class="hero-slide hero-slide-4"></div>
+    </div>
+
+    <div class="hero-dots">
+        <div class="hero-dot active" onclick="goSlide(0)"></div>
+        <div class="hero-dot"        onclick="goSlide(1)"></div>
+        <div class="hero-dot"        onclick="goSlide(2)"></div>
+        <div class="hero-dot"        onclick="goSlide(3)"></div>
+    </div>
+    <div class="hero-progress" id="heroProgress"></div>
+
+    <div class="container">
+        <div class="hero-content" data-aos="fade-up">
+            <div class="hero-badge">
+                <span class="hero-badge-dot"></span>
+                Tanzania's Premier Agricultural Exporter
+            </div>
+            <h1 class="hero-title">
+                Premium Agri Products<br>
+                <span class="hl">From East Africa</span><br>
+                To Global Markets
+            </h1>
+            <div class="hero-btns">
+                <a href="{% url 'products:list' %}" class="btn-hero-gold">
+                    <i class="fas fa-seedling"></i> Explore Products
+                </a>
+                <a href="{% url 'core:contact' %}" class="btn-hero-outline">
+                    <i class="fas fa-paper-plane"></i> Request a Quote
+                </a>
+            </div>
+            <div class="hero-markets">
+                <span class="hero-markets-label">Exporting To:</span>
+                <span class="mflag"><i class="fas fa-globe-asia"></i> Asia</span>
+                <span class="mflag"><i class="fas fa-mosque"></i> Middle East</span>
+                <span class="mflag"><i class="fas fa-globe-europe"></i> Europe</span>
+            </div>
+        </div>
+    </div>
+    <div class="hero-scroll-hint">
+        <span>Scroll</span>
+        <i class="fas fa-chevron-down"></i>
+    </div>
+</section>
+
+<!-- ══ STATS ══ -->
+<section class="stats-bar">
+    <div class="container">
+        <div class="stats-grid">
+            {% for stat in stats %}
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                <div class="stat-icon"><i class="{{ stat.icon }}"></i></div>
+                <div class="stat-number">{{ stat.number }}</div>
+                <div class="stat-label">{{ stat.label }}</div>
+            </div>
+            {% empty %}
+            <div class="stat-item" data-aos="fade-up">
+                <div class="stat-icon"><i class="fas fa-tractor"></i></div>
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Farmer Partners</div>
+            </div>
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="100">
+                <div class="stat-icon"><i class="fas fa-globe"></i></div>
+                <div class="stat-number">20+</div>
+                <div class="stat-label">Countries Served</div>
+            </div>
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
+                <div class="stat-icon"><i class="fas fa-box"></i></div>
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Products</div>
+            </div>
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="300">
+                <div class="stat-icon"><i class="fas fa-certificate"></i></div>
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Quality Assured</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ══ ABOUT ══ -->
+<section class="about-sec py-section">
+    <div class="container">
+        <div class="grid-2" style="align-items:center; gap:4rem;">
+            <div data-aos="fade-right">
+                <div class="about-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=800&q=80" alt="East Africa Farmers">
+                    <div class="about-float">
+                        <div class="af-icon"><i class="fas fa-award"></i></div>
+                        <div>
+                            <div class="af-num">10+</div>
+                            <div class="af-lbl">Years of Excellence</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div data-aos="fade-left">
+                <div class="section-label">Who We Are</div>
+                <h2 class="section-title">{{ site_settings.about_title|default:"East Africa AgroHub" }}</h2>
+                <p class="section-subtitle" style="margin-top:.75rem;">
+                    {{ site_settings.about_text|default:"We are a leading agricultural export company connecting East African farmers to global markets, ensuring quality, reliability and fair trade."|truncatewords:60 }}
+                </p>
+                <div class="vm-grid">
+                    <div class="vm-card">
+                        <h4><i class="fas fa-eye" style="color:var(--gold-main)"></i> Vision</h4>
+                        <p>{{ site_settings.vision|default:"To be the most trusted bridge between East African agriculture and global food markets." }}</p>
+                    </div>
+                    <div class="vm-card">
+                        <h4><i class="fas fa-rocket" style="color:var(--gold-main)"></i> Mission</h4>
+                        <p>{{ site_settings.mission|default:"Empowering farmers through fair trade, technology, and access to international buyers." }}</p>
+                    </div>
+                </div>
+                <div style="margin-top:2rem;">
+                    <a href="{% url 'core:about' %}" class="btn btn-green">
+                        <i class="fas fa-arrow-right"></i> Learn More About Us
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ PRODUCTS ══ -->
+<section class="products-sec py-section">
+    <div class="container">
+        <div style="text-align:center; margin-bottom:3rem;" data-aos="fade-up">
+            <div class="section-label" style="justify-content:center;">Our Exports</div>
+            <h2 class="section-title">Premium Agricultural Products</h2>
+            <p class="section-subtitle" style="margin:1rem auto 0;">
+                Sourced from the best farms across East Africa, processed and packaged to international standards.
+            </p>
+        </div>
+        <div class="cat-tabs" data-aos="fade-up">
+            <button class="cat-tab active" onclick="filterProducts('all',this)">
+                <i class="fas fa-th"></i> All Products
+            </button>
+            {% for cat in categories %}
+            <button class="cat-tab" onclick="filterProducts('{{ cat.slug }}',this)">
+                <i class="{{ cat.icon }}"></i> {{ cat.name }}
+            </button>
+            {% endfor %}
+        </div>
+        <div class="products-grid" id="productsGrid">
+            {% for product in featured_products %}
+            <div class="product-card" data-cat="{{ product.category.slug }}" data-aos="fade-up">
+                <div class="prod-img">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                    <img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=400&q=80" alt="{{ product.name }}">
+                    {% endif %}
+                    <span class="prod-badge">{{ product.category.name }}</span>
+                </div>
+                <div class="prod-body">
+                    <div class="prod-name">{{ product.name }}</div>
+                    <div class="prod-desc">{{ product.short_description|default:product.description|truncatewords:15 }}</div>
+                    <div class="prod-origin"><i class="fas fa-map-marker-alt"></i> {{ product.origin }}</div>
+                </div>
+            </div>
+            {% empty %}
+            {% for i in "123456"|make_list %}
+            <div class="product-card" data-aos="fade-up">
+                <div class="prod-img">
+                    <img src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400&q=80" alt="Product">
+                    <span class="prod-badge">Grains</span>
+                </div>
+                <div class="prod-body">
+                    <div class="prod-name">Quality Maize</div>
+                    <div class="prod-desc">Premium white maize sourced from highland farms across Tanzania.</div>
+                    <div class="prod-origin"><i class="fas fa-map-marker-alt"></i> Tanzania, East Africa</div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endfor %}
+        </div>
+        <div style="text-align:center; margin-top:3rem;" data-aos="fade-up">
+            <a href="{% url 'products:list' %}" class="btn btn-green">
+                <i class="fas fa-seedling"></i> View All Products
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ══ WHY CHOOSE US — PREMIUM ══ -->
+<section class="why-sec">
+
+    <!-- Background image slider -->
+    <div class="why-bg-slides" id="whyBgSlides">
+        <div class="why-bg-slide why-bg-1 active"></div>
+        <div class="why-bg-slide why-bg-2"></div>
+        <div class="why-bg-slide why-bg-3"></div>
+        <div class="why-bg-slide why-bg-4"></div>
+        <div class="why-bg-slide why-bg-5"></div>
+        <div class="why-bg-slide why-bg-6"></div>
+    </div>
+
+    <!-- Overlay layers -->
+    <div class="why-overlay"></div>
+    <div class="why-overlay-2"></div>
+    <div class="why-dots-tex"></div>
+    <div class="why-top-bar"></div>
+
+    <!-- Content -->
+    <div class="why-inner">
+        <div class="container">
+
+            <!-- Header row -->
+            <div class="why-header" data-aos="fade-up">
+                <div class="why-header-left">
+                    <div class="why-eyebrow">
+                        <span class="why-eyebrow-line"></span>
+                        Why Partner With Us
+                    </div>
+                    <h2 class="why-title">Why Choose<br><em>East Africa AgroHub</em></h2>
+                    <p class="why-subtitle">We go beyond just supplying products — we build lasting trade partnerships rooted in trust, quality, and reliability.</p>
+                </div>
+                <div class="why-nav">
+                    <button class="why-nav-btn" id="whyPrev" aria-label="Previous">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <button class="why-nav-btn" id="whyNext" aria-label="Next">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cards slider track -->
+            <div class="why-track-wrap" data-aos="fade-up" data-aos-delay="100">
+                <div class="why-track" id="whyTrack">
+
+                    {% for item in why_items %}
+                    <div class="why-card">
+                        <div class="why-card-num">{{ forloop.counter|stringformat:"02d" }}</div>
+                        <div class="why-icon"><i class="{{ item.icon }}"></i></div>
+                        <h3>{{ item.title }}</h3>
+                        <p>{{ item.description }}</p>
+                        <div class="why-card-badge">Learn More</div>
+                    </div>
+                    {% empty %}
+                    <div class="why-card">
+                        <div class="why-card-num">01</div>
+                        <div class="why-icon"><i class="fas fa-network-wired"></i></div>
+                        <h3>Reliable Sourcing Network</h3>
+                        <p>Direct partnerships with hundreds of farmers across Tanzania and East Africa, ensuring consistent supply year-round.</p>
+                        <div class="why-card-badge">Trusted Partners</div>
+                    </div>
+                    <div class="why-card">
+                        <div class="why-card-num">02</div>
+                        <div class="why-icon"><i class="fas fa-certificate"></i></div>
+                        <h3>International Export Standards</h3>
+                        <p>All products are processed and packaged to meet ISO, HACCP, and importing country requirements for seamless customs clearance.</p>
+                        <div class="why-card-badge">Certified Quality</div>
+                    </div>
+                    <div class="why-card">
+                        <div class="why-card-num">03</div>
+                        <div class="why-icon"><i class="fas fa-shipping-fast"></i></div>
+                        <h3>End-to-End Logistics</h3>
+                        <p>From farm to freight — we handle documentation, phytosanitary certificates, fumigation, and port clearance on your behalf.</p>
+                        <div class="why-card-badge">Full Service</div>
+                    </div>
+                    <div class="why-card">
+                        <div class="why-card-num">04</div>
+                        <div class="why-icon"><i class="fas fa-leaf"></i></div>
+                        <h3>Sustainable & Ethical Trade</h3>
+                        <p>We ensure fair pricing for farmers while delivering premium value to buyers — a trade model built for longevity.</p>
+                        <div class="why-card-badge">Eco Responsible</div>
+                    </div>
+                    <div class="why-card">
+                        <div class="why-card-num">05</div>
+                        <div class="why-icon"><i class="fas fa-handshake"></i></div>
+                        <h3>Dedicated Trade Support</h3>
+                        <p>A personal export manager handles your account, keeps you updated on shipments, and resolves issues within 24 hours.</p>
+                        <div class="why-card-badge">Personal Service</div>
+                    </div>
+                    <div class="why-card">
+                        <div class="why-card-num">06</div>
+                        <div class="why-icon"><i class="fas fa-globe-africa"></i></div>
+                        <h3>20+ Export Destinations</h3>
+                        <p>Proven track record of successful exports to Asia, Middle East, Europe and beyond — with the paperwork to prove it.</p>
+                        <div class="why-card-badge">Global Reach</div>
+                    </div>
+                    {% endfor %}
+
+                </div><!-- /why-track -->
+            </div>
+
+            <!-- Progress & dots -->
+            <div class="why-progress-wrap" data-aos="fade-up" data-aos-delay="150">
+                <div class="why-progress-bar">
+                    <div class="why-progress-fill" id="whyProgress"></div>
+                </div>
+                <div class="why-slide-dots" id="whySlideDots"></div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ══ CORE VALUES ══ -->
+<section class="values-sec py-section">
+    <div class="container">
+        <div style="text-align:center; margin-bottom:3rem;" data-aos="fade-up">
+            <div class="section-label" style="justify-content:center;">What Drives Us</div>
+            <h2 class="section-title">Our Core Values</h2>
+        </div>
+        <div class="grid-3">
+            {% for val in core_values %}
+            <div class="val-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                <div class="val-icon"><i class="{{ val.icon }}"></i></div>
+                <h3>{{ val.title }}</h3>
+                {% if val.description %}
+                <p style="font-size:.85rem; color:var(--gray-600); margin-top:.5rem; font-weight:300;">{{ val.description }}</p>
+                {% endif %}
+            </div>
+            {% empty %}
+            <div class="val-card" data-aos="fade-up"><div class="val-icon"><i class="fas fa-star"></i></div><h3>Quality</h3></div>
+            <div class="val-card" data-aos="fade-up"><div class="val-icon"><i class="fas fa-handshake"></i></div><h3>Integrity</h3></div>
+            <div class="val-card" data-aos="fade-up"><div class="val-icon"><i class="fas fa-shield-alt"></i></div><h3>Reliability</h3></div>
+            <div class="val-card" data-aos="fade-up"><div class="val-icon"><i class="fas fa-smile"></i></div><h3>Satisfaction</h3></div>
+            <div class="val-card" data-aos="fade-up"><div class="val-icon"><i class="fas fa-leaf"></i></div><h3>Sustainability</h3></div>
+            <div class="val-card" data-aos="fade-up"><div class="val-icon"><i class="fas fa-lightbulb"></i></div><h3>Innovation</h3></div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ══ CTA ══ -->
+<section class="cta-sec">
+    <div class="container cta-inner" data-aos="zoom-in">
+        <h2 class="cta-title">Ready to Source Premium Products?</h2>
+        <p class="cta-sub">Contact us today and let's discuss your import requirements.</p>
+        <div class="cta-btns">
+            <a href="{% url 'core:contact' %}" class="btn-cta-white">
+                <i class="fas fa-paper-plane"></i> Send an Inquiry
+            </a>
+            <a href="tel:{{ site_settings.phone }}" class="btn-cta-outline">
+                <i class="fas fa-phone"></i> {{ site_settings.phone|default:"+255 700 000 000" }}
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ── HERO SLIDER ──
+let heroIdx = 0;
+const heroSlides   = document.querySelectorAll('.hero-slide');
+const heroDots     = document.querySelectorAll('.hero-dot');
+const heroProgress = document.getElementById('heroProgress');
+let heroTimer;
+
+function goSlide(n) {
+    heroSlides[heroIdx].classList.remove('active');
+    heroDots[heroIdx].classList.remove('active');
+    heroIdx = n;
+    heroSlides[heroIdx].classList.add('active');
+    heroDots[heroIdx].classList.add('active');
+    restartProgress();
+}
+
+function restartProgress() {
+    heroProgress.style.transition = 'none';
+    heroProgress.style.width = '0';
+    clearTimeout(heroTimer);
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+        heroProgress.style.transition = 'width 5s linear';
+        heroProgress.style.width = '100%';
+    }));
+    heroTimer = setTimeout(() => goSlide((heroIdx + 1) % heroSlides.length), 5000);
+}
+restartProgress();
+
+// ── PRODUCT FILTER ──
+function filterProducts(cat, btn) {
+    document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.product-card').forEach(card => {
+        card.style.display = (cat === 'all' || card.dataset.cat === cat) ? 'block' : 'none';
+    });
+}
+
+// ── WHY SECTION — card slider + bg image slider ──
+(function() {
+    const track      = document.getElementById('whyTrack');
+    const dotsWrap   = document.getElementById('whySlideDots');
+    const progressEl = document.getElementById('whyProgress');
+    const bgSlides   = document.querySelectorAll('.why-bg-slide');
+    const prevBtn    = document.getElementById('whyPrev');
+    const nextBtn    = document.getElementById('whyNext');
+
+    if (!track) return;
+
+    const cards      = track.querySelectorAll('.why-card');
+    const totalCards = cards.length;
+
+    // How many cards visible at a time (responsive)
+    function visibleCount() {
+        if (window.innerWidth <= 640)  return 1;
+        if (window.innerWidth <= 1024) return 2;
+        return 3;
+    }
+
+    let current  = 0;
+    let bgIdx    = 0;
+    let autoTimer, progressTimer;
+    const AUTO_MS = 4500;
+
+    // Build dots
+    const maxSteps = () => Math.max(0, totalCards - visibleCount());
+
+    function buildDots() {
+        dotsWrap.innerHTML = '';
+        const steps = maxSteps();
+        for (let i = 0; i <= steps; i++) {
+            const d = document.createElement('button');
+            d.className = 'why-dot' + (i === 0 ? ' active' : '');
+            d.setAttribute('aria-label', 'Slide ' + (i+1));
+            d.addEventListener('click', () => goTo(i));
+            dotsWrap.appendChild(d);
+        }
+    }
+
+    function updateDots() {
+        dotsWrap.querySelectorAll('.why-dot').forEach((d, i) => {
+            d.classList.toggle('active', i === current);
+        });
+    }
+
+    function updateBg() {
+        bgSlides.forEach((s, i) => s.classList.toggle('active', i === bgIdx));
+        bgIdx = (bgIdx + 1) % bgSlides.length;
+    }
+
+    function getCardWidth() {
+        if (!cards[0]) return 0;
+        const gap = 24; // 1.5rem gap
+        return cards[0].offsetWidth + gap;
+    }
+
+    function goTo(n) {
+        const steps = maxSteps();
+        current = Math.max(0, Math.min(n, steps));
+        track.style.transform = `translateX(-${current * getCardWidth()}px)`;
+        updateDots();
+        updateBg();
+        restartProgress();
+    }
+
+    function restartProgress() {
+        clearTimeout(autoTimer);
+        clearTimeout(progressTimer);
+        progressEl.style.transition = 'none';
+        progressEl.style.width = '0%';
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            progressEl.style.transition = `width ${AUTO_MS}ms linear`;
+            progressEl.style.width = '100%';
+        }));
+        autoTimer = setTimeout(() => {
+            const steps = maxSteps();
+            goTo(current < steps ? current + 1 : 0);
+        }, AUTO_MS);
+    }
+
+    prevBtn.addEventListener('click', () => goTo(current - 1));
+    nextBtn.addEventListener('click', () => goTo(current + 1));
+
+    // Touch/swipe support
+    let touchStartX = 0;
+    track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    track.addEventListener('touchend',   e => {
+        const diff = touchStartX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 40) goTo(diff > 0 ? current + 1 : current - 1);
+    });
+
+    // Rebuild on resize
+    window.addEventListener('resize', () => { buildDots(); goTo(Math.min(current, maxSteps())); });
+
+    // Init
+    buildDots();
+    restartProgress();
+})();
+const counters = document.querySelectorAll('.stat-number');
+const co = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const el     = e.target;
+        const target = el.textContent;
+        const num    = parseInt(target.replace(/\D/g, ''));
+        const suffix = target.replace(/[0-9]/g, '');
+        let curr = 0;
+        const step = Math.max(1, Math.ceil(num / 60));
+        const t = setInterval(() => {
+            curr = Math.min(curr + step, num);
+            el.textContent = curr + suffix;
+            if (curr >= num) clearInterval(t);
+        }, 22);
+        co.unobserve(el);
+    });
+}, { threshold: 0.5 });
+counters.forEach(c => co.observe(c));
+</script>
+{% endblock %}

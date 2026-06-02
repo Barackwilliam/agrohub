@@ -1,0 +1,300 @@
+{% extends 'base.html' %}
+{% block title %}Our Products{% endblock %}
+
+{% block extra_css %}
+/* ── PRODUCTS PAGE SPECIFIC ── */
+.products-page { background: var(--cream); }
+
+.sticky-filters {
+    position: sticky;
+    top: 70px;
+    z-index: 100;
+    background: white;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--gray-200);
+    margin-bottom: 3rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.filters-inner {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.filters-inner::-webkit-scrollbar { display: none; }
+
+.filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 1.25rem;
+    border-radius: 50px;
+    border: 2px solid var(--gray-200);
+    background: white;
+    color: var(--gray-600);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+    font-family: var(--font-body);
+}
+.filter-btn:hover,
+.filter-btn.active {
+    background: var(--green-main);
+    border-color: var(--green-main);
+    color: white;
+    box-shadow: 0 4px 15px rgba(26,122,64,0.3);
+}
+
+.category-section { margin-bottom: 4rem; }
+
+.category-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--gray-200);
+}
+
+.category-icon-wrap {
+    width: 52px; height: 52px;
+    background: linear-gradient(135deg, var(--green-main), var(--green-light));
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; color: white;
+    box-shadow: 0 4px 15px rgba(26,122,64,0.3);
+}
+
+.category-header h2 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--green-dark);
+    font-weight: 700;
+}
+
+.category-header .count {
+    margin-left: auto;
+    background: var(--green-pale);
+    color: var(--green-main);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+}
+
+.products-grid-page {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem;
+}
+
+.product-card-page {
+    background: white;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--gray-200);
+    transition: var(--transition);
+}
+.product-card-page:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+    border-color: transparent;
+}
+
+.pcp-img {
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    background: var(--green-pale);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+}
+.pcp-img img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.5s ease;
+}
+.product-card-page:hover .pcp-img img { transform: scale(1.08); }
+
+.pcp-badge {
+    position: absolute; top: 0.75rem; right: 0.75rem;
+    background: linear-gradient(135deg, var(--gold-main), var(--gold-light));
+    color: white;
+    font-size: 0.65rem; font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 50px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.pcp-body { padding: 1.25rem; }
+
+.pcp-name {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--green-dark);
+    margin-bottom: 0.5rem;
+}
+
+.pcp-details { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 1rem; }
+
+.pcp-detail {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    color: var(--gray-600);
+}
+.pcp-detail i { color: var(--green-main); width: 14px; }
+
+.pcp-inquire {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    width: 100%;
+    padding: 0.65rem;
+    background: var(--green-pale);
+    color: var(--green-main);
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition);
+    border: none; cursor: pointer;
+    font-family: var(--font-body);
+}
+.pcp-inquire:hover { background: var(--green-main); color: white; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+    .products-grid-page { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+}
+{% endblock %}
+
+{% block content %}
+
+<section class="page-hero">
+    <div class="container page-hero-content">
+        <div class="breadcrumb" data-aos="fade-down">
+            <a href="{% url 'core:home' %}">Home</a>
+            <span>/</span>
+            <span class="current">Products</span>
+        </div>
+        <h1 data-aos="fade-up">Our <span style="color:var(--gold-light)">Products</span></h1>
+        <p data-aos="fade-up" data-aos-delay="100">Premium agricultural commodities sourced from across East Africa, ready for global export.</p>
+    </div>
+</section>
+
+<section class="products-page py-section">
+    <div class="container">
+
+        <!-- Sticky Filters -->
+        <div class="sticky-filters">
+            <div class="filters-inner">
+                <button class="filter-btn active" onclick="filterCats('all', this)">
+                    <i class="fas fa-th"></i> All Categories
+                </button>
+                {% for cat in categories %}
+                <button class="filter-btn" onclick="filterCats('{{ cat.slug }}', this)">
+                    <i class="{{ cat.icon }}"></i> {{ cat.name }}
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Categories -->
+        {% for cat in categories %}
+        <div class="category-section" data-cat="{{ cat.slug }}" data-aos="fade-up">
+            <div class="category-header">
+                <div class="category-icon-wrap">
+                    <i class="{{ cat.icon }}"></i>
+                </div>
+                <div>
+                    <h2>{{ cat.name }}</h2>
+                    {% if cat.description %}
+                    <p style="font-size:0.85rem; color:var(--gray-600); margin-top:0.2rem;">{{ cat.description }}</p>
+                    {% endif %}
+                </div>
+                <span class="count">{{ cat.products.count }} Products</span>
+            </div>
+
+            <div class="products-grid-page">
+                {% for product in cat.products.all %}
+                {% if product.is_active %}
+                <div class="product-card-page" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                    <div class="pcp-img">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        {% else %}
+                            <img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=400&q=80" alt="{{ product.name }}">
+                        {% endif %}
+                        {% if product.is_featured %}<span class="pcp-badge">Featured</span>{% endif %}
+                    </div>
+                    <div class="pcp-body">
+                        <div class="pcp-name">{{ product.name }}</div>
+                        <div class="pcp-details">
+                            {% if product.origin %}
+                            <div class="pcp-detail"><i class="fas fa-map-marker-alt"></i> {{ product.origin }}</div>
+                            {% endif %}
+                            {% if product.minimum_order %}
+                            <div class="pcp-detail"><i class="fas fa-box"></i> Min: {{ product.minimum_order }}</div>
+                            {% endif %}
+                            {% if product.available_seasons %}
+                            <div class="pcp-detail"><i class="fas fa-calendar-alt"></i> {{ product.available_seasons }}</div>
+                            {% endif %}
+                            {% if product.packaging %}
+                            <div class="pcp-detail"><i class="fas fa-cube"></i> {{ product.packaging }}</div>
+                            {% endif %}
+                        </div>
+                        <a href="{% url 'core:contact' %}" class="pcp-inquire">
+                            <i class="fas fa-paper-plane"></i> Request Quote
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+                {% empty %}
+                <div style="grid-column:1/-1; text-align:center; padding:3rem; color:var(--gray-600);">
+                    <i class="fas fa-seedling" style="font-size:3rem; color:var(--green-pale); display:block; margin-bottom:1rem;"></i>
+                    Products coming soon for this category.
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% empty %}
+        <div style="text-align:center; padding:5rem 0;">
+            <i class="fas fa-seedling" style="font-size:4rem; color:var(--green-pale); display:block; margin-bottom:1rem;"></i>
+            <h3 style="color:var(--gray-600);">Products will appear here once added from admin.</h3>
+            <a href="{% url 'core:contact' %}" class="btn btn-green" style="margin-top:1.5rem;">Contact Us Instead</a>
+        </div>
+        {% endfor %}
+
+        <!-- CTA -->
+        <div style="background:linear-gradient(135deg, var(--green-dark), var(--green-mid)); border-radius:var(--radius-lg); padding:3rem; text-align:center; margin-top:3rem;" data-aos="zoom-in">
+            <h3 style="font-family:var(--font-display); font-size:1.8rem; color:white; margin-bottom:0.75rem;">Can't Find What You Need?</h3>
+            <p style="color:rgba(255,255,255,0.75); margin-bottom:1.5rem;">Contact us directly — we source a wide range of agricultural products across East Africa.</p>
+            <a href="{% url 'core:contact' %}" class="btn btn-gold">
+                <i class="fas fa-paper-plane"></i> Send a Custom Inquiry
+            </a>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function filterCats(cat, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.category-section').forEach(s => {
+        s.style.display = (cat === 'all' || s.dataset.cat === cat) ? 'block' : 'none';
+    });
+}
+</script>
+{% endblock %}
