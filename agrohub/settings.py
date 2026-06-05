@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-change-this-in-production-agrohub-2024')
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*', 'eastafricaagrohub.com', 'www.eastafricaagrohub.com', '.onrender.com']
 
@@ -32,6 +32,9 @@ INSTALLED_APPS = [
     'inquiries',
 ]
 
+JAMIITEK_API_KEY = "So8q1wsIl8tmM2x8h_mbh0Il_n5yKtXEBuju5w3-2_dQOPeEEYjGsFbnwTibXds2"
+JAMIITEK_API_URL = "https://jamiitek.com/api/site-status/"
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -41,6 +44,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'jamiitek_middleware.JamiiTekStatusMiddleware',
 ]
 
 ROOT_URLCONF = 'agrohub.urls'
