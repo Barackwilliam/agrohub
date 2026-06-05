@@ -229,7 +229,7 @@
                 <div class="product-card-page" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
                     <div class="pcp-img">
                         {% if product.image %}
-                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                            <img src="{{ product.image }}" alt="{{ product.name }}">
                         {% else %}
                             <img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=400&q=80" alt="{{ product.name }}">
                         {% endif %}

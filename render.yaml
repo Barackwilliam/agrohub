@@ -1,11 +1,12 @@
 services:
   - type: web
-    name: eastafrica-agrohub
-    env: python
-    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
+    name: agrohub
+    runtime: python
+    buildCommand: ./build.sh
     startCommand: gunicorn agrohub.wsgi:application
     envVars:
-      - key: SECRET_KEY
+      - key: PYTHON_VERSION
+        value: 3.12.8
         generateValue: true
       - key: DEBUG
         value: False

@@ -88,6 +88,13 @@ DATABASES = {
 # }
 
 
+
+UPLOADCARE = {
+    'pub_key': 'cff49d484a4e0a5d423f',
+    'secret': 'f536e03e075f3a690e32',
+}
+
+
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},

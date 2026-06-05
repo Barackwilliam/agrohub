@@ -823,7 +823,7 @@
             <div class="product-card" data-cat="{{ product.category.slug }}" data-aos="fade-up">
                 <div class="prod-img">
                     {% if product.image %}
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    <img src="{{ product.image }}" alt="{{ product.name }}">
                     {% else %}
                     <img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=400&q=80" alt="{{ product.name }}">
                     {% endif %}

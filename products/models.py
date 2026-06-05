@@ -7,7 +7,7 @@ class ProductCategory(models.Model):
     slug = models.SlugField(unique=True, blank=True)
     icon = models.CharField(max_length=100, default="fas fa-seedling", help_text="FontAwesome icon class")
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='categories/', null=True, blank=True)
+    image =  models.CharField(max_length=255, blank=True, null=True)
     order = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True)
 
@@ -23,6 +23,16 @@ class ProductCategory(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+        
+    # Kwa Open Graph preview
+    def get_og_image_url(self):
+        return f"https://ucarecdn.com/{self.image}/-/resize/1200x630/-/format/auto/"
+
+    # Kwa frontend display optimized
+    def get_image_url(self):
+        return f"https://ucarecdn.com/{self.image}/-/format/jpg/-/quality/smart/"
+   
+
 
 
 class Product(models.Model):
@@ -31,7 +41,7 @@ class Product(models.Model):
     slug = models.SlugField(unique=True, blank=True)
     description = models.TextField(blank=True)
     short_description = models.CharField(max_length=300, blank=True)
-    image = models.ImageField(upload_to='products/', null=True, blank=True)
+    image =  models.CharField(max_length=255, blank=True, null=True)
     origin = models.CharField(max_length=200, default="Tanzania, East Africa")
     available_seasons = models.CharField(max_length=200, blank=True, help_text="e.g. Year-round, March-July")
     minimum_order = models.CharField(max_length=100, blank=True, help_text="e.g. 5 Metric Tons")
@@ -49,6 +59,16 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    # Kwa Open Graph preview
+    def get_og_image_url(self):
+        return f"https://ucarecdn.com/{self.image}/-/resize/1200x630/-/format/auto/"
+
+    # Kwa frontend display optimized
+    def get_image_url(self):
+        return f"https://ucarecdn.com/{self.image}/-/format/jpg/-/quality/smart/"
+   
+
 
     def save(self, *args, **kwargs):
         if not self.slug:
